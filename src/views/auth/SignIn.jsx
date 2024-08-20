@@ -1,10 +1,36 @@
 import InputField from "components/fields/InputField";
 import { FcGoogle } from "react-icons/fc";
 import Checkbox from "components/checkbox";
-
+import { useGoogleLogin } from "@react-oauth/google";
+import { googleAuth } from "../../api";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../store/slice";
 export default function SignIn() {
+  const dispatch = useDispatch();
+
+  const responseGoogle = async (authResult) => {
+    console.log(authResult);
+    try {
+      if (authResult["code"]) {
+        const result = await googleAuth(authResult["code"]);
+        const { _id, email, name, image, createdAt, updatedAt } =
+          result?.data?.user;
+
+        dispatch(setUser({ _id, email, name, image, createdAt, updatedAt }));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: responseGoogle,
+    onError: responseGoogle,
+    flow: "auth-code",
+  });
+
   return (
-    <div className="mt-16 mb-16 flex h-full w-full items-center justify-center px-2 md:mx-0 md:px-0 lg:mb-10 lg:items-center lg:justify-start">
+    <div className="mb-16 mt-16 flex h-full w-full items-center justify-center px-2 md:mx-0 md:px-0 lg:mb-10 lg:items-center lg:justify-start">
       {/* Sign in section */}
       <div className="mt-[10vh] w-full max-w-full flex-col items-center md:pl-4 lg:pl-0 xl:max-w-[420px]">
         <h4 className="mb-2.5 text-4xl font-bold text-navy-700 dark:text-white">
@@ -17,7 +43,10 @@ export default function SignIn() {
           <div className="rounded-full text-xl">
             <FcGoogle />
           </div>
-          <h5 className="text-sm font-medium text-navy-700 dark:text-white">
+          <h5
+            className="text-sm font-medium text-navy-700 dark:text-white"
+            onClick={googleLogin}
+          >
             Sign In with Google
           </h5>
         </div>

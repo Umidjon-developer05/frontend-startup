@@ -4,14 +4,23 @@ import image1 from "assets/img/profile/image1.png";
 import image2 from "assets/img/profile/image2.png";
 import image3 from "assets/img/profile/image3.png";
 import Card from "components/card";
-
+import { motion } from "framer-motion";
 const Project = () => {
   return (
     <Card extra={"w-full p-4 h-full"}>
       <div className="mb-8 w-full">
-        <h4 className="text-xl font-bold text-navy-700 dark:text-white">
-          All projects
-        </h4>
+        <div className="flex flex-wrap  items-center justify-between">
+          <h4 className="text-xl font-bold text-navy-700 dark:text-white">
+            All projects
+          </h4>
+          <motion.div
+            className="box flex justify-center items-center"
+            whileHover={{ scale: 1.1 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          >
+            Add project
+          </motion.div>
+        </div>
         <p className="mt-2 text-base text-gray-600">
           Here you can find more details about your projects. Keep you user
           engaged by providing meaningful information.
